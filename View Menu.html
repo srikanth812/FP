@@ -17,20 +17,23 @@
             color: white;
             text-align: center;
             padding: 15px;
+            position: relative;
         }
 
         header h1 {
             margin: 0;
         }
 
-        nav a {
-            margin: 0 15px;
-            color: white;
-            text-decoration: none;
+        nav {
+            position: absolute;
+            top: 15px;
+            right: 20px;
         }
 
-        section {
-            padding: 20px;
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
         }
 
         .menu-item {
@@ -73,6 +76,11 @@
             padding: 20px;
             margin-top: 20px;
             border-radius: 5px;
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 300px;
+            z-index: 1000;
         }
 
         #cart-items {
@@ -88,6 +96,126 @@
             border-radius: 5px;
         }
 
+        /* Modal Styling */
+        #bill-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        #bill-content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        #bill-content h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .bill-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .bill-header img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .bill-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .bill-header p {
+            margin: 5px 0;
+            color: #777;
+        }
+
+        .bill-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bill-summary {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .bill-summary div {
+            margin-bottom: 10px;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+            font-size: 1.2em;
+            color: #28a745;
+        }
+
+        .thank-you {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .print-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 16px;
+        }
+
+        .close-button:hover {
+            background-color: #cc0000;
+        }
+
         footer {
             background-color: #333;
             color: white;
@@ -98,8 +226,38 @@
             bottom: 0;
         }
 
-        .cart-item {
+        /* Card Details Form */
+        #card-details-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #card-details-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        #card-details-form input {
+            width: 100%;
+            padding: 8px;
             margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #card-details-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #card-details-form button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -111,6 +269,16 @@
             <a href="#cart"><h3>Cart</h3></a>
         </nav>
     </header>
+
+    <!-- Cart Section -->
+    <section id="cart">
+        <h2>Your Cart</h2>
+        <div id="cart-items">
+            <!-- Cart items will be displayed here -->
+        </div>
+        <p id="total-price">Total: $0</p>
+        <button id="checkout-button">Checkout</button>
+    </section>
 
     <!-- Menu Items -->
     <div class="menu-item">
@@ -598,22 +766,9 @@
 
 
 
-
-
-
-
-
     <!-- Add more menu items here -->
 
-    <section id="cart">
-        <h2>Your Cart</h2>
-        <div id="cart-items">
-            <!-- Cart items will be displayed here -->
-        </div>
-        <p id="total-price">Total: $0</p>
-        <button id="checkout-button">Checkout</button>
-    </section>
-
+    <!-- Checkout Section -->
     <section id="checkout">
         <h2>Checkout</h2>
         <p>Choose Payment Method:</p>
@@ -630,9 +785,38 @@
             <label>
                 <input type="radio" name="payment" value="Cash on Delivery"> Cash on Delivery
             </label><br><br>
+            <div id="card-details-form">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" placeholder="Enter card number" required>
+                <label for="expiry-date">Expiry Date</label>
+                <input type="text" id="expiry-date" placeholder="MM/YY" required>
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" placeholder="CVV" required>
+                <button type="button" onclick="processCardPayment()">Submit Payment</button>
+            </div>
             <button type="submit">Confirm Order</button>
         </form>
     </section>
+
+    <!-- Bill Modal -->
+    <div id="bill-modal">
+        <div id="bill-content">
+            <button class="close-button" onclick="closeBillModal()">&times;</button>
+            <div class="bill-header">
+                <img src="https://img.freepik.com/premium-vector/golden-d-letter-logo-design-tempalte_89908-473.jpg" alt="Company Logo" style="height: 60px; vertical-align: middle;" alt="Bill Icon">
+                <h3>Dining Spot</h3>
+                <p>Denton City,Texas,USA</p>
+                <p>Phone: 9392604717</p>
+            </div>
+            <h2>Bill Invoice</h2>
+            <div id="bill-details">
+                <!-- Bill details will be displayed here -->
+            </div>
+            <button class="print-button" onclick="window.print()">Print Bill</button>
+        </div>
+    </div>
+
+
 
     <script>
         const cart = [];
@@ -641,6 +825,12 @@
         const checkoutButton = document.getElementById('checkout-button');
         const checkoutSection = document.getElementById('checkout');
         const paymentForm = document.getElementById('payment-form');
+        const billModal = document.getElementById('bill-modal');
+        const billDetails = document.getElementById('bill-details');
+        const cardDetailsForm = document.getElementById('card-details-form');
+
+        const DELIVERY_CHARGES = 5.00;
+        const GST_RATE = 0.18; // 18% GST
 
         function addToCart(name, price) {
             cart.push({ name, price });
@@ -665,111 +855,97 @@
             updateCart();
         }
 
+        // Directly show payment methods on checkout button click
         checkoutButton.addEventListener('click', () => {
             checkoutSection.style.display = 'block';
         });
 
+        // Show card details form if Credit Card or Debit Card is selected
+        paymentForm.addEventListener('change', (e) => {
+            const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            if (selectedPaymentMethod === 'Credit Card' || selectedPaymentMethod === 'Debit Card') {
+                cardDetailsForm.style.display = 'block';
+            } else {
+                cardDetailsForm.style.display = 'none';
+            }
+        });
+
         paymentForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const paymentMethod = document.querySelector('input[name="payment"]:checked');
-            if (paymentMethod) {
-                alert(`Order confirmed with ${paymentMethod.value}`);
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            if (paymentMethod === 'Credit Card' || paymentMethod === 'Debit Card') {
+                processCardPayment();
+            } else {
+                generateBill();
+                cart.length = 0; // Clear the cart after successful payment
+                updateCart();
+                checkoutSection.style.display = 'none';
+            }
+        });
+
+        function processCardPayment() {
+            const cardNumber = document.getElementById('card-number').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (cardNumber && expiryDate && cvv) {
+                alert('Payment processed successfully!');
                 generateBill();
                 cart.length = 0; // Clear the cart after successful payment
                 updateCart();
                 checkoutSection.style.display = 'none';
             } else {
-                alert('Please select a payment method');
+                alert('Please fill in all card details.');
             }
-        });
-
-        function generateBill() {
-            // Open a new tab
-            const billWindow = window.open('', '_blank');
-            billWindow.document.write(`
-                <html>
-                <head>
-                    <title>Order Bill</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 20px;
-                        }
-                        h1 {
-                            color: #333;
-                        }
-                        .bill-item {
-                            margin-bottom: 10px;
-                        }
-                        .total {
-                            font-weight: bold;
-                            margin-top: 20px;
-                        }
-                    </style>
-                </head>
-                <body>
-
-
-
-                                   <html>
-                <head>
-                    <title>Order Bill</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 20px;
-                            background-color: #f9f9f9;
-                        }
-                        h1 {
-                            color: #333;
-                            text-align: center;
-                        }
-                        .bill-details {
-                            background-color: #fff;
-                            border: 1px solid #ddd;
-                            border-radius: 5px;
-                            padding: 20px;
-                            margin: 20px auto;
-                            max-width: 600px;
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        }
-                        .bill-item {
-                            margin-bottom: 10px;
-                            padding: 10px;
-                            border-bottom: 1px solid #eee;
-                        }
-                        .total {
-                            font-weight: bold;
-                            margin-top: 20px;
-                            text-align: right;
-                        }
-                        .payment-details {
-                            margin-top: 20px;
-                            padding: 10px;
-                            background-color: #f1f1f1;
-                            border-radius: 5px;
-                        }
-                        .payment-details h3 {
-                            margin-top: 0;
-                        }
-                    </style>
-                </head>
-                    <h1>Your Bill</h1>
-                    <div id="bill-items">
-                        ${cart.map(item => `
-                            <div class="bill-item">${item.name} - $${item.price.toFixed(2)}</div>
-                        `).join('')}
-                    </div>
-                    <div class="total">Total: $${cart.reduce((total, item) => total + item.price, 0).toFixed(2)}</div>
-
-                  
-                </body>
-                </html>
-            `);
-            billWindow.document.close();
         }
 
-    </script>
 
+
+        function generateBill() {
+            // Generate order number, time, and date
+            const orderNumber = Math.floor(Math.random() * 1000000);
+            const orderDate = new Date().toLocaleDateString();
+            const orderTime = new Date().toLocaleTimeString();
+
+            // Calculate subtotal, GST, and total with delivery charges
+            const subtotal = cart.reduce((total, item) => total + item.price, 0);
+            const gst = subtotal * GST_RATE;
+            const total = subtotal + gst + DELIVERY_CHARGES;
+
+            // Display bill details
+            billDetails.innerHTML = `
+                <div>Order Number: ${orderNumber}</div>
+                <div>Order Date: ${orderDate}</div>
+                <div>Order Time: ${orderTime}</div>
+                <div id="bill-items">
+                    ${cart.map(item => `
+                        <div class="bill-item">
+                            <span>${item.name}</span>
+                            <span>$${item.price.toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="bill-summary">
+                    <div>Items Cost: $${subtotal.toFixed(2)}</div>
+                    <div>GST (18%): $${gst.toFixed(2)}</div>
+                    <div>Delivery Charges: $${DELIVERY_CHARGES.toFixed(2)}</div>
+                </div>
+                <div class="total">
+                    Total: $${total.toFixed(2)}
+                </div>
+                <div class="thank-you">
+                    Thank you for your order! We hope to see you again soon.
+                </div>
+            `;
+            billModal.style.display = 'flex';
+        }s
+
+        function closeBillModal() {
+            billModal.style.display = 'none';
+        }
+
+
+
+    </script>
 </body>
 </html>
